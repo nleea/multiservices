@@ -1,0 +1,29 @@
+name: base_nest
+
+services:
+  db:
+    container_name: base_nest
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: base_nest
+    volumes:
+      - db_data_nest:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - db_local
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - db_local
+    ports:
+      - 8080:8080
+
+volumes:
+  db_data_nest:
+networks:
+  db_local:

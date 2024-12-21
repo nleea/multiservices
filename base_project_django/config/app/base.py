@@ -20,8 +20,7 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"), overwrite=True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_OR_KEY")
-
+SECRET_KEY = env("SECRET_OR_KEY", cast=str)
 COMMON_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -134,7 +133,7 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "id",
-    "USER_ID_CLAIM": "user_id",
+    "USER_ID_CLAIM": "sub",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),

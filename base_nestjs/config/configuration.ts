@@ -7,4 +7,5 @@ export default () => ({
     password: process.env.DB_PASSWORD || 'postgres',
     db: process.env.DB_NAME || 'base_nest',
   },
+  jwt_secret: process.env.JWT_SECRET,
 });

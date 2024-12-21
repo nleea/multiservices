@@ -13,7 +13,6 @@ export class CreatePermissionDto {
   path: string;
 
   @IsString()
-  @IsNotEmpty()
   method?: string;
 }
 

@@ -15,6 +15,9 @@ import {
   RolPermissionEntity,
   RolResourceEntity,
 } from './core/entities';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './core/strategy/auth.strategy';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -32,11 +35,16 @@ import {
       isGlobal: true,
       load: [Configuration],
     }),
+    PassportModule,
+    JwtModule.register({
+      secret: Configuration().jwt_secret,
+      signOptions: { expiresIn: '12h', algorithm: 'HS256' },
+    }),
     RolsModule,
     ResourcesModule,
     SecurityModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule {}

@@ -1,5 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
+import { ErrorValidatorFactory } from '../../core/factory/error.validator.factory';
+import { DatabaseType } from '../../core/abstracts';
 
 @Catch(QueryFailedError)
 export class QueryExceptionFilter implements ExceptionFilter {
@@ -7,13 +9,16 @@ export class QueryExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-    if (exception.message.includes('duplicate key value')) {
-      response.status(409).json({
-        data: null,
-        status: 409,
-        errors: `Conflict - ${(exception.driverError as any).detail} duplicate key value violates unique constraint`,
-        url: request.path,
-      });
-    }
+
+    const entity = (exception.driverError as any).table;
+
+    const validator = ErrorValidatorFactory.createDatabaseValidator(
+      DatabaseType.POSTGRES,
+      null,
+      request,
+    );
+
+    const errorResponse = validator.validateError(exception as any, entity);
+    response.status(errorResponse.status).json(errorResponse);
   }
 }

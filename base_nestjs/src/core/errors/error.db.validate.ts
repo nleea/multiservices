@@ -32,7 +32,7 @@ export class DatabaseErrorValidator
     entity: string,
   ): ErrorResponse {
     return this.transform(
-      new BadRequestException(`${entity}. - ${error.detail}`),
+      new BadRequestException(`${entity} - ${error.detail}`),
       2303,
       409,
       this.request.path,
